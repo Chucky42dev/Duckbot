@@ -1,0 +1,18 @@
+# Build output
+build/
+dist/
+
+# IDE
+.vscode/
+.idea/
+
+# PlatformIO
+.pio/
+
+# Local environment files
+.env
+*.local
+
+# OS files
+.DS_Store
+Thumbs.db
