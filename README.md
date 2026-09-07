@@ -12,3 +12,7 @@ Experimentální platforma pro malou chodící kachnu s ESP32, IMU senzorem a se
 ## Stav projektu
 
 Projekt je na začátku. Nejprve vznikne malý funkční prototyp, teprve potom složitější mechanika a chůze.
+
+## Dokumentace
+
+- [Průzkum Microducku a plán Duckbotu](docs/research-microduck.md)
