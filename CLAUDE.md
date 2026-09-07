@@ -20,8 +20,11 @@ an autonomous neural walking policy.
 - Main research document: `docs/research-microduck.md`
 - PDF output: `docs/research-microduck.pdf`
 - Servo comparison and leg BOMs: `docs/servo-comparison.md` (+ `.pdf`)
+- Crane v0 learning roadmap: `docs/roadmap-jerab.md` (+ `.pdf`)
+- XL330 purchase links, Wizard install, bilingual CZ/EN control table:
+  `docs/xl330-ridici-tabulka.md` (+ `.pdf`)
 - PDF generator: `scripts/build_research_pdf.py` (builds all docs; pass
-  `research` or `servos` to build one)
+  `research`, `servos`, `crane` or `xl330` to build one)
 
 The project currently contains documentation and PDF generation only. Firmware,
 mechanical CAD, a MuJoCo model and a PlatformIO project have not been created
@@ -106,9 +109,29 @@ IMU or automatic learning system. NFC tags can act as software triggers for
 behaviors; Hugging Face credit can pay for cloud jobs, but does not guarantee a
 successful policy.
 
+## Chosen path (decided 2026-09-07)
+
+The owner does not program yet and wants to learn by doing; the journey is the
+goal. Buying a finished Microduck was considered and rejected for now because
+it would remove the hardware/firmware learning. Decisions:
+
+1. Servo family: DYNAMIXEL XL330-M288-T (Dynamixel Wizard, documented
+   Protocol 2.0 and hardware Bus Watchdog make it the better teaching servo;
+   it also keeps Microduck compatibility). See `docs/servo-comparison.md`.
+2. First project is a small 3-servo crane ("jerab v0"), not a leg: base yaw,
+   boom pitch, hoist/gripper. Plan: `docs/roadmap-jerab.md`.
+3. First purchase is the OpenRB-150 Starter Kit (OpenRB-150 + one
+   XL330-M288-T, 1 194 Kč at ROBOTIS CZ Store by MegaRobot); ESP32 with a
+   74LVC2G241 bus buffer comes after the crane basics work on OpenRB.
+4. Learning mode: the owner writes the firmware and scripts; Claude explains
+   what the next step should do and why, reviews the owner's code, and does
+   not write the code for them unless explicitly asked. A step is done only
+   when the owner can explain the code in their own words.
+
 ## Recommended next implementation
 
-When implementation starts, create a small PlatformIO ESP32 firmware that can:
+When implementation starts, create a small firmware (OpenRB-150 first, then
+PlatformIO ESP32) that can:
 
 1. discover or ping one XL330 actuator;
 2. read model ID, position, current, voltage and temperature;

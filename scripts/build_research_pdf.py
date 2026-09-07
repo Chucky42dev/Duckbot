@@ -33,6 +33,16 @@ DOCUMENTS = {
         ROOT / "docs" / "servo-comparison.pdf",
         "Duckbot: srovnání serv a kusovníky",
     ),
+    "crane": (
+        ROOT / "docs" / "roadmap-jerab.md",
+        ROOT / "docs" / "roadmap-jerab.pdf",
+        "Duckbot: jeřáb v0 – učební roadmapa",
+    ),
+    "xl330": (
+        ROOT / "docs" / "xl330-ridici-tabulka.md",
+        ROOT / "docs" / "xl330-ridici-tabulka.pdf",
+        "XL330-M288-T: nákup, Wizard a řídicí tabulka (CZ/EN)",
+    ),
 }
 
 
@@ -141,6 +151,8 @@ def build_pdf(source, output, title):
             ratios = [0.30, 0.47, 0.06, 0.17]  # kusovník
         elif len(header) == 4:
             ratios = [0.19, 0.27, 0.27, 0.27]
+        elif len(header) == 7:
+            ratios = [0.07, 0.17, 0.42, 0.04, 0.06, 0.10, 0.14]  # řídicí tabulka
         else:
             ratios = [1 / len(header)] * len(header)
         widths = [available * ratio for ratio in ratios]
