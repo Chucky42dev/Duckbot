@@ -121,7 +121,7 @@ it would remove the hardware/firmware learning. Decisions:
 2. First project is a small 3-servo crane ("jerab v0"), not a leg: base yaw,
    boom pitch, hoist/gripper. Plan: `docs/roadmap-jerab.md`.
 3. First purchase is the OpenRB-150 Starter Kit (OpenRB-150 + one
-   XL330-M288-T, 1 194 Kč at ROBOTIS CZ Store by MegaRobot); ESP32 with a
+   XL330-M288-T, 1 194 Kč at robotis.cz, operator INMENET13 s.r.o.); ESP32 with a
    74LVC2G241 bus buffer comes after the crane basics work on OpenRB.
 4. Learning mode: the owner writes the firmware and scripts; Claude explains
    what the next step should do and why, reviews the owner's code, and does

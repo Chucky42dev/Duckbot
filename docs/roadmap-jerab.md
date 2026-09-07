@@ -35,15 +35,15 @@ Podrobné srovnání serv a ceny: `servo-comparison.md`.
 
 | Položka | K čemu | Kč (orientačně) |
 |---|---|---|
-| OpenRB-150 Starter Kit = OpenRB-150 + 1× XL330-M288-T (první nákup) | kroky 1–4; deska je Arduino-kompatibilní, napájí XL330 z USB, z výroby funguje jako most pro Dynamixel Wizard | 1 194 (ROBOTIS CZ Store by MegaRobot, ověřeno 8. 9. 2026) |
+| OpenRB-150 Starter Kit = OpenRB-150 + 1× XL330-M288-T (první nákup) | kroky 1–4; deska je Arduino-kompatibilní, napájí XL330 z USB, z výroby funguje jako most pro Dynamixel Wizard | 1 194 (robotis.cz, ověřeno 8. 9. 2026) |
 | USB kabel k OpenRB-150 | není v kitu | 100 |
 | X3P kabely (balení 10 ks, po kroku 3) | propojení více serv řetězením; hub není potřeba | 570 |
 | Závaží, provázek, hák, kuchyňská váha | měření momentu | 200 |
-| 2× XL330-M288-T (po kroku 3) | otoč základny, naviják/chapadlo | ~2 000 (CZ Store cenu ověřit; Generation Robots €40,20/ks) |
+| 2× XL330-M288-T (po kroku 3) | otoč základny, naviják/chapadlo | 1 244 (robotis.cz 622 Kč/ks, ověřeno 8. 9. 2026) |
 | Laboratorní zdroj 0–30 V / 5 A | proud v reálném čase, proudový limit jako ochrana | 1 500 |
 | PETG, šrouby M2, ložiska, hliníkový profil | rám a díly jeřábu | 700 |
 | ESP32-S3 DevKit + budič 74LVC2G241 (po kroku 7) | vlastní řídicí vrstva | 350 |
-| Celkem | | ~6 600 |
+| Celkem | | ~5 900 |
 
 ## Kroky
 

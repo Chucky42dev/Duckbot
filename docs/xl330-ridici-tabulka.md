@@ -19,9 +19,10 @@ má čtyři porty – pro tři serva jeřábu tedy **není potřeba hub**.
 
 | Položka (Item) | Obchod | Cena | Odkaz |
 |---|---|---|---|
-| **OpenRB-150 Starter Kit** (OpenRB-150 + XL330-M288-T) – doporučený první nákup | ROBOTIS CZ Store by MegaRobot (CZ, skladem) | **1 194 Kč** s DPH | [1] |
+| **OpenRB-150 Starter Kit** (OpenRB-150 + XL330-M288-T) – doporučený první nákup | robotis.cz (ROBOTIS CZ Store by MegaRobot, skladem) | **1 194 Kč** s DPH | [1] |
 | OpenRB-150 Starter Kit | ROBOTIS US | $49,90 + doprava, DPH, clo | [2] |
-| DYNAMIXEL XL330-M288-T (1 ks, v balení 1 kabel X3P 180 mm) | ROBOTIS CZ Store by MegaRobot | cena ověřit v obchodě | [1] |
+| DYNAMIXEL XL330-M288-T (1 ks, v balení 1 kabel X3P 180 mm) | robotis.cz | **622 Kč** s DPH (513,85 bez DPH) | [1] |
+| OpenRB-150 Embedded Controller | robotis.cz | **648 Kč** s DPH (535,35 bez DPH) | [1] |
 | DYNAMIXEL XL330-M288-T | Generation Robots (FR, EU, 24–48 h) | €40,20 ≈ 1 000 Kč | [3] |
 | OpenRB-150 Embedded Controller | Generation Robots | €43,47 ≈ 1 090 Kč | [4] |
 | 10× kabel X3P 180 mm (convertible) | Generation Robots | €22,78 ≈ 570 Kč | [5] |
@@ -33,8 +34,8 @@ má čtyři porty – pro tři serva jeřábu tedy **není potřeba hub**.
 
 Odkazy k nákupu:
 
-- [1] ROBOTIS CZ Store by MegaRobot – hledat „OpenRB-150"; URL doplnit po
-  první objednávce
+- [1] `https://www.robotis.cz/176-openrb-150-starter-kit` (ostatní položky
+  přes vyhledávání v obchodě)
 - [2] `https://www.robotis.us/openrb-150-starter-kit/`
 - [3] `https://www.generationrobots.com/en/403817-dynamixel-xl330-m288-t-servo-motor.html`
 - [4] `https://www.generationrobots.com/en/404029-openrb-150-embedded-controller-arduino-compatible.html`
@@ -51,8 +52,15 @@ položky s označením X3P nebo „for Dynamixel X series (TTL)". Kabel přibale
 k servu na první kroky stačí; balení 10 ks kupovat až s dalšími servy.
 
 Z běžných českých e-shopů (Botland, RPishop, HWKitchen, LaskaKit) Dynamixel
-nikdo nevede; oficiální cestou v ČR je ROBOTIS CZ Store by MegaRobot. Generation
-Robots je záloha pro položky, které CZ obchod nemá skladem.
+nikdo nevede. Cesta v ČR je robotis.cz („ROBOTIS CZ Store by MegaRobot"),
+prověřeno 8. 9. 2026: provozovatel INMENET13 s.r.o., IČO 01890280, DIČ
+CZ01890280, nám. Jiřího z Lobkovic 2164/3, Praha 3; v ARES založena
+12. 7. 2013, aktivní plátce DPH, bez insolvence. Tel. +420 721 774 776,
+info@robotis.cz. Je to malý dovozce zaměřený na školy (megarobot.cz je druhý
+e-shop téhož provozovatele): soukromníci platí 100 % předem, dobírka není,
+doprava Zásilkovna / PPL / TopTrans. Před první objednávkou se vyplatí zavolat
+a ověřit skladovost. Generation Robots (FR) a Mouser EU jsou záloha pro
+položky, které robotis.cz nemá.
 
 ## 2. Dynamixel Wizard 2.0 – instalace a první spuštění
 
