@@ -44,6 +44,99 @@ výsledkem konkrétní mechaniky, kalibrace, senzorů a natrénovaných politik.
 U vlastního Duckbotu musíme každou schopnost nejdřív naprogramovat nebo
 natrénovat.
 
+## K čemu je Dev Pack
+
+Dev Pack není druhý robot ani balík nových funkcí. Je to sada náhradních dílů a
+pomůcek pro člověka, který chce robota rozebírat, opravovat a vyvíjet pro něj
+vlastní chování.
+
+Podle nabídky obsahuje:
+
+- **3 náhradní motory** pro opravy, testování a experimenty s jiným kusem,
+- **5 motorových kabelů** pro náhradu poškozeného kabelu nebo pokusy s novým
+   zapojením,
+- **2 baterie** pro delší práci a rychlé střídání vybitých akumulátorů,
+- **dvojitou nabíječku** pro nabíjení obou baterií současně,
+- **10 NFC tagů** pro vlastní interakce, spouštění akcí a chování podle NFC,
+- **Hugging Face kredit** určený na cloudové úlohy, například trénování robota,
+- **šroubovák** a **sadu náhradních šroubků** pro servis a montáž.
+
+Pro vývoj je nejdůležitější kombinace náhradních motorů, kabelů, baterií a
+Hugging Face kreditu. U chodícího robota je motor spotřební riziková součást:
+špatná kalibrace, pád nebo zablokovaný kloub ho může přetížit. Dev Pack proto
+snižuje dobu mimo provoz a umožňuje bezpečnější experimentování.
+
+Co Dev Pack **neobsahuje**:
+
+- nový procesor nebo rychlejší řídicí počítač,
+- další senzory jako kameru, LiDAR nebo IMU,
+- mechanickou přestavbu robota,
+- automatický nástroj na učení nových schopností.
+
+NFC tagy samy o sobě robota nic nenaučí. Jsou to identifikátory, které může
+software použít jako spouštěč: například tag „tanec“ vybere uloženou politiku a
+tag „domů“ spustí jinou sekvenci. Hugging Face kredit může pomoci s tréninkem,
+ale výsledek stále závisí na správném modelu simulace, reward funkci a testování
+na skutečném robotu.
+
+## Senzory a odhad nákladů
+
+To, čemu Pollen říká „LiDAR“, je ve skutečnosti 8×8 ToF matice: malý čip za
+pár stovek korun, ne rotující lidar za tisíce. Právě proto se do robota za
+399 USD vejde „kamera i LiDAR“.
+
+| Komponenta | Co to je | Odhad ceny v kusovce |
+|---|---|---|
+| „LiDAR“ | 8×8 ToF matice, prakticky jistě ST VL53L5CX / VL53L8CX (dosah ~4 m, 64 zón, I²C) | 250–400 Kč |
+| Kamera | širokoúhlá MIPI-CSI kamerka třídy OV5647 / IMX219 | 150–400 Kč |
+| 2× IMU | 6osé MEMS (BMI270, ICM-42688, LSM6DSO) | 50–150 Kč/ks |
+| Výpočet | Rockchip RK3566 s NPU, 1 GB RAM, 32 GB flash (deska třídy Radxa Zero 3) | 800–1 200 Kč |
+| 15× servo | sériové sběrnicové servo (Open Duck Mini používal Feetech STS3215) | 300–450 Kč/ks |
+| Baterie | NP-F550 (kamerový standard Sony), ~1 h provozu | 250–400 Kč |
+
+Senzory dohromady stojí pod 1 000 Kč. Cena robota je hlavně v servech
+(~5 000 Kč) a mechanice.
+
+### Co ToF matice umí a neumí
+
+- **Umí:** detekovat překážku před sebou, odhadnout vzdálenost k míči nebo
+  zdi, poznat okraj stolu (spodní zóny hlásí „nekonečno“), zhruba určit směr
+  k nejbližšímu objektu.
+- **Neumí:** mapovat místnost jako SLAM lidar. 64 pixelů hloubky, žádná rotace,
+  žádný 360° sken. Je to hloubková kamerka s velmi malým rozlišením.
+
+Kamera na RK3566 s NPU zvládne lehké modely (detekce míče, tváře, čtení ArUco
+značek). Proto RK3566 a ne Raspberry Pi Zero.
+
+### Co je reálné pro Duckbot
+
+**Vidění, fáze 1 (stačí ESP32):**
+
+- **VL53L5CX modul** (Pololu, Adafruit, klony) ≈ 300 Kč. Připojí se přes I²C
+  rovnou na ESP32, dává 64 vzdáleností při 15 Hz. Detekce překážky a míče
+  před zobákem.
+- Levnější alternativa **VL53L1X** (jedna zóna, ~150 Kč): jen „něco je přede
+  mnou ve vzdálenosti X“.
+
+**Vidění, fáze 2 (potřebuje větší počítač):**
+
+- **ESP32-S3 + OV2640** (ESP32-CAM, 200–300 Kč): streamování obrazu a velmi
+  jednoduchá detekce barvy (oranžový míč). Na neuronové sítě je slabý.
+- **Raspberry Pi Zero 2 W + Camera Module 3** (~1 500 Kč) nebo **Radxa Zero 3W**
+  (~1 100 Kč, stejný RK3566 jako Microduck): tady už poběží ONNX politika i
+  detekce objektů, ESP32 zůstane jako realtime vrstva pro serva.
+
+**IMU:** BMI270 nebo ICM-42688 modul za 100–150 Kč, na první pokusy MPU-6050
+za 50 Kč (horší drift).
+
+**Čemu se vyhnout:** rotační lidary (RPLidar A1 ~2 500 Kč, LD19 ~1 500 Kč)
+jsou na 800g robota těžké, žerou proud a pro chůzi nic nepřinesou. Hloubkové
+kamery RealSense / OAK-D (5 000+ Kč) nedávají smysl, dokud robot nestojí.
+
+**Doporučený nákup na začátek:** ESP32-S3, BMI270, VL53L5CX, celkem pod 700 Kč.
+To je stejná senzorická sada jako Microduck bez kamery. Kameru a RK3566 / Pi
+přidat, až chůze funguje.
+
 ## Kam se podívat po simulátoru
 
 1. **Microduck simulátor:**
@@ -61,10 +154,10 @@ natrénovat.
    `docs/policy-manifest.md`.
 
 3. **Sim2real a RL:**
-   Oficiální web odkazuje na samostatný projekt `microduck_rl`. V době průzkumu
-   byl přímý odkaz na GitHubu nedostupný, takže je lepší začít Hugging Face
-   simulátorem a dokumentací hlavního repozitáře. Neber název repozitáře jako
-   záruku, že je stále veřejný nebo že odpovídá aktuální verzi runtime.
+   [pollen-robotics/microduck_rl](https://github.com/pollen-robotics/microduck_rl)
+
+   Tréninková prostředí (mjlab), export politiky do ONNX a nástroj `publish`
+   pro nahrání na Hugging Face Hub. Repozitář je od září 2026 veřejný.
 
 4. **MuJoCo:**
    [MuJoCo documentation](https://mujoco.readthedocs.io/en/stable/)
@@ -72,6 +165,93 @@ natrénovat.
    To je fyzikální simulátor. Nejprve stačí umět načíst model, spustit scénu,
    číst stav kloubů a IMU a posílat cíle do serv. PPO a vlastní trénink přijdou
    až po ověření, že model odpovídá skutečné mechanice.
+
+## Jak se politika dostává do robota
+
+Robot nespouští simulaci, spouští **politiku**: neuronovou síť s pevným
+rozhraním. Simulace (MuJoCo) je jen trenažér, kde se síť učí.
+
+```text
+vstup  (observation):  úhly a rychlosti serv, IMU (gyro, gravitace),
+                       poslední akce, požadovaná rychlost (x, y, otočení)
+                                 |
+                         ONNX model (50 Hz)
+                                 |
+výstup (action):       cílové úhly pro serva
+```
+
+U Microducku má graf tvar `[1, 61] -> [1, 14]`: 61 čísel pozorování dovnitř,
+14 cílových úhlů ven.
+
+### Co je ONNX
+
+ONNX = **Open Neural Network Exchange**. Je to otevřený formát souboru pro
+uložení natrénované neuronové sítě nezávisle na frameworku. Síť se natrénuje
+v PyTorchi, exportuje se do `policy.onnx` (jednotky MB) a na robotu ji spouští
+**ONNX Runtime**, malá knihovna, která nepotřebuje PyTorch ani GPU. Proto to
+běží na RK3566 s 1 GB RAM.
+
+### Cesta souboru
+
+```text
+MuJoCo / mjlab + PPO trénink (PC s GPU)     repozitář microduck_rl
+        |  export
+   policy.onnx + manifest.json
+        |  uv run publish
+   Hugging Face Hub (jeden .onnx na repozitář)
+        |  robotctl policy search / load
+   RK3566 na palubě robota, ONNX Runtime, smyčka 50 Hz
+        |
+   serva
+```
+
+Robot je linuxový počítač na Wi-Fi. Politiky se do něj nekopírují ručně, ale
+přes nástroj `robotctl policy list | load | reset | check | update | search`,
+který je stahuje z Hugging Face Hubu.
+
+### Kde ONNX soubory sehnat
+
+- **Oficiální politiky:**
+  [pollen-robotics/microduck-policies](https://huggingface.co/pollen-robotics/microduck-policies).
+  Pollen tam 31. srpna 2026 zveřejnil devět politik, které se dodávají
+  s robotem (chůze, sed, kop, zvednutí po pádu atd.).
+- **Komunitní politiky:** na Hubu vznikají další, například
+  `q2p/microduck-beak-throw` nebo `HannesVonEssen/microduck-running`.
+  Přehled udržuje [awesome-microduck](https://github.com/joeynyc/awesome-microduck).
+- **Vlastní trénink:**
+  [pollen-robotics/microduck_rl](https://github.com/pollen-robotics/microduck_rl)
+  obsahuje tréninková prostředí (mjlab), export do ONNX a příkaz `publish`,
+  který před nahráním zkontroluje tvar grafu, otestuje výstup na vzorových
+  vstupech a doplní `manifest.json` podle schématu z `docs/policy-manifest.md`.
+
+### Proč to na skutečném robotu funguje (sim2real)
+
+Síť se učila v simulaci s ideálními servy a podlahou. Aby fungovala i na
+hardwaru:
+
+- **MJCF model musí sedět:** hmotnosti, délky, rozsahy kloubů, rychlost
+  a moment serv.
+- **Domain randomization:** při tréninku se náhodně mění tření, zpoždění serv,
+  hmotnosti a šum IMU, síť se naučí snést, že realita je trochu jiná.
+- **Stejné rozhraní:** pořadí serv, jednotky (radiány) a frekvence smyčky musí
+  být na robotu identické se simulací. Jedna prohozená noha a robot spadne.
+
+### Co z toho plyne pro Duckbot
+
+Stažená politika Microducku na Duckbotu fungovat nebude: je natrénovaná na
+jinou mechaniku, jiná serva a 61/14 rozhraní. Použitelný je postup, ne soubor.
+ONNX inference na ESP32 rozumně nepoběží, takže:
+
+```text
+PC / Raspberry Pi          ESP32
+ONNX politika, 50 Hz  ->   přijme cílové úhly
+(Wi-Fi / USB seriál)       omezí rozsah a rychlost
+                      <-   pošle stav serv + IMU
+```
+
+První reálný krok ale není simulace: nejdřív ručně naprogramované pózy a stoj
+z IMU. Simulace má smysl, až je hotová mechanika a změřené parametry, jinak
+trénujeme politiku pro robota, který neexistuje.
 
 ## Jak bych programoval Duckbot
 
@@ -241,5 +421,9 @@ Když bude v0.3 bezpečně chodit s ruční trajektorií, bude mít smysl invest
 - [Microduck: oficiální repozitář](https://github.com/pollen-robotics/microduck)
 - [Microduck: oficiální produktová stránka](https://pollen-robotics.com/microduck/)
 - [Microduck Simulator na Hugging Face](https://huggingface.co/spaces/pollen-robotics/microduck-simulator)
+- [Microduck RL: tréninková prostředí](https://github.com/pollen-robotics/microduck_rl)
+- [Microduck policies na Hugging Face](https://huggingface.co/pollen-robotics/microduck-policies)
+- [awesome-microduck: přehled komunitních politik a nástrojů](https://github.com/joeynyc/awesome-microduck)
+- [Microduck press kit: specifikace](https://pollen-robotics.com/microduck/press-kit/)
 - [MuJoCo dokumentace](https://mujoco.readthedocs.io/en/stable/)
 - [TorchRL PPO dokumentace](https://docs.pytorch.org/rl/main/reference/generated/torchrl.objectives.ClipPPOLoss.html)

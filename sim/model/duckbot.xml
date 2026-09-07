@@ -1,0 +1,131 @@
+<?xml version="1.0" ?>
+<mujoco model="duckbot">
+  <compiler angle="radian" autolimits="true"/>
+  <option timestep="0.005" integrator="implicitfast"/>
+  <visual>
+    <global offwidth="1280" offheight="720"/>
+  </visual>
+  <default>
+    <joint damping="0.053" frictionloss="0.0048" armature="0.0018"/>
+    <position kp="0.55" kv="0.0" forcerange="-0.96 0.96" ctrlrange="-10 10"/>
+    <default class="visual">
+      <geom contype="0" conaffinity="0" group="1"/>
+    </default>
+    <default class="collision">
+      <geom contype="1" conaffinity="1" group="1" condim="3"/>
+    </default>
+  </default>
+  <asset>
+    <texture name="grid" type="2d" builtin="checker" width="512" height="512" rgb1="0.12 0.12 0.13" rgb2="0.18 0.18 0.2"/>
+    <material name="grid" texture="grid" texrepeat="20 20" texuniform="true" reflectance="0.1"/>
+  </asset>
+  <worldbody>
+    <light pos="0.5 -0.5 1.5" dir="-0.3 0.3 -1" diffuse="0.8 0.8 0.8"/>
+    <light pos="-0.5 0.5 1.0" dir="0.3 -0.3 -1" diffuse="0.4 0.4 0.4"/>
+    <geom name="floor" type="plane" size="3 3 0.05" material="grid" friction="0.8 0.005 0.0001" contype="1" conaffinity="1"/>
+    <camera name="side" pos="0.42 -0.42 0.24" mode="targetbody" target="trunk"/>
+    <camera name="front" pos="0.55 0 0.18" mode="targetbody" target="trunk"/>
+    <body name="trunk" pos="0 0 0.1385">
+      <freejoint name="root"/>
+      <geom name="trunk_shell" type="box" size="0.0375 0.03 0.025" rgba="0.95 0.95 0.93 1" mass="0.2" class="collision"/>
+      <site name="imu" pos="0 0 0" size="0.005" group="4"/>
+      <camera name="track" mode="trackcom" pos="0.45 -0.55 0.30" xyaxes="0.77 0.63 0 -0.28 0.34 0.9"/>
+      <body name="left_hip_yaw" pos="0.006 0.0175 -0.005">
+        <joint name="left_hip_yaw" axis="0 0 1" range="-0.436 0.524"/>
+        <geom type="box" size="0.012 0.01 0.008" pos="0 0 -0.00825" rgba="0.25 0.25 0.28 1" mass="0.023" class="visual"/>
+        <body name="left_hip_roll" pos="0 0 -0.0165">
+          <joint name="left_hip_roll" axis="1 0 0" range="-0.384 0.384"/>
+          <geom type="box" size="0.01 0.014 0.006" rgba="0.15 0.15 0.15 1" mass="0.006" class="visual"/>
+          <body name="left_upper_leg" pos="0 0 -0.0125">
+            <joint name="left_hip_pitch" axis="0 1 0" range="-1.571 1.571"/>
+            <geom type="box" size="0.013 0.01 0.017" pos="0 0.004 0" rgba="0.25 0.25 0.28 1" mass="0.018" class="visual"/>
+            <geom type="capsule" size="0.012" fromto="0 0 0 0 0 -0.042" rgba="0.95 0.95 0.93 1" mass="0.030000000000000002" class="visual"/>
+            <body name="left_lower_leg" pos="0 0 -0.042">
+              <joint name="left_knee" axis="0 1 0" range="-1.571 1.571"/>
+              <geom type="capsule" size="0.0102" fromto="0 0 0 0 0 -0.049" rgba="0.15 0.15 0.15 1" mass="0.022" class="collision"/>
+              <body name="left_foot" pos="0 0 -0.049">
+                <joint name="left_ankle" axis="0 1 0" range="-1.571 1.571"/>
+                <geom type="box" size="0.01 0.013 0.009" rgba="0.25 0.25 0.28 1" mass="0.018" class="visual"/>
+                <geom name="left_sole" type="box" size="0.03 0.016 0.003" pos="0 0 -0.015" rgba="0.98 0.55 0.10 1" mass="0.012" friction="1.0 0.005 0.0001" class="collision"/>
+                <site name="left_foot_site" type="box" size="0.03 0.016 0.001" pos="0 0 -0.018" group="4"/>
+              </body>
+            </body>
+          </body>
+        </body>
+      </body>
+      <body name="neck" pos="0.026 0 0.032">
+        <joint name="neck_pitch" axis="0 1 0" range="-1.571 1.047"/>
+        <geom type="capsule" size="0.009" fromto="0 0 0 0 0 0.05" rgba="0.95 0.95 0.93 1" mass="0.037" class="visual"/>
+        <body name="head_pitch" pos="0 0 0.05">
+          <joint name="head_pitch" axis="0 1 0" range="-1.571 1.571"/>
+          <geom type="box" size="0.01 0.012 0.01" rgba="0.25 0.25 0.28 1" mass="0.006" class="visual"/>
+          <body name="head_yaw" pos="0 0 0.019">
+            <joint name="head_yaw" axis="0 0 1" range="-2.967 2.967"/>
+            <geom type="box" size="0.012 0.012 0.009" rgba="0.25 0.25 0.28 1" mass="0.049" class="visual"/>
+            <body name="head" pos="0 0 0.018">
+              <joint name="head_roll" axis="1 0 0" range="-0.436 0.436"/>
+              <geom name="head_shell" type="box" size="0.04 0.03 0.025" pos="0.025 0 0.01" rgba="0.95 0.95 0.93 1" mass="0.189" class="collision"/>
+              <geom type="box" size="0.018 0.022 0.006" pos="0.079 0 -0.002" rgba="0.98 0.55 0.10 1" mass="0" class="visual"/>
+              <geom type="sphere" size="0.007" pos="0.061 0.026 0.018" rgba="0.1 0.1 0.1 1" mass="0" class="visual"/>
+              <geom type="sphere" size="0.007" pos="0.061 -0.026 0.018" rgba="0.1 0.1 0.1 1" mass="0" class="visual"/>
+              <site name="camera_site" pos="0.065 0 0.01" group="4"/>
+              <camera name="eye" pos="0.075 0 0.015" xyaxes="0 -1 0 0 0 1" fovy="90"/>
+            </body>
+          </body>
+        </body>
+      </body>
+      <body name="right_hip_yaw" pos="0.006 -0.0175 -0.005">
+        <joint name="right_hip_yaw" axis="0 0 1" range="-0.436 0.524"/>
+        <geom type="box" size="0.012 0.01 0.008" pos="0 0 -0.00825" rgba="0.25 0.25 0.28 1" mass="0.023" class="visual"/>
+        <body name="right_hip_roll" pos="0 0 -0.0165">
+          <joint name="right_hip_roll" axis="1 0 0" range="-0.384 0.384"/>
+          <geom type="box" size="0.01 0.014 0.006" rgba="0.15 0.15 0.15 1" mass="0.006" class="visual"/>
+          <body name="right_upper_leg" pos="0 0 -0.0125">
+            <joint name="right_hip_pitch" axis="0 1 0" range="-1.571 1.571"/>
+            <geom type="box" size="0.013 0.01 0.017" pos="0 -0.004 0" rgba="0.25 0.25 0.28 1" mass="0.018" class="visual"/>
+            <geom type="capsule" size="0.012" fromto="0 0 0 0 0 -0.042" rgba="0.95 0.95 0.93 1" mass="0.030000000000000002" class="visual"/>
+            <body name="right_lower_leg" pos="0 0 -0.042">
+              <joint name="right_knee" axis="0 1 0" range="-1.571 1.571"/>
+              <geom type="capsule" size="0.0102" fromto="0 0 0 0 0 -0.049" rgba="0.15 0.15 0.15 1" mass="0.022" class="collision"/>
+              <body name="right_foot" pos="0 0 -0.049">
+                <joint name="right_ankle" axis="0 1 0" range="-1.571 1.571"/>
+                <geom type="box" size="0.01 0.013 0.009" rgba="0.25 0.25 0.28 1" mass="0.018" class="visual"/>
+                <geom name="right_sole" type="box" size="0.03 0.016 0.003" pos="0 0 -0.015" rgba="0.98 0.55 0.10 1" mass="0.012" friction="1.0 0.005 0.0001" class="collision"/>
+                <site name="right_foot_site" type="box" size="0.03 0.016 0.001" pos="0 0 -0.018" group="4"/>
+              </body>
+            </body>
+          </body>
+        </body>
+      </body>
+    </body>
+  </worldbody>
+  <actuator>
+    <position name="left_hip_yaw" joint="left_hip_yaw"/>
+    <position name="left_hip_roll" joint="left_hip_roll"/>
+    <position name="left_hip_pitch" joint="left_hip_pitch"/>
+    <position name="left_knee" joint="left_knee"/>
+    <position name="left_ankle" joint="left_ankle"/>
+    <position name="neck_pitch" joint="neck_pitch"/>
+    <position name="head_pitch" joint="head_pitch"/>
+    <position name="head_yaw" joint="head_yaw"/>
+    <position name="head_roll" joint="head_roll"/>
+    <position name="right_hip_yaw" joint="right_hip_yaw"/>
+    <position name="right_hip_roll" joint="right_hip_roll"/>
+    <position name="right_hip_pitch" joint="right_hip_pitch"/>
+    <position name="right_knee" joint="right_knee"/>
+    <position name="right_ankle" joint="right_ankle"/>
+  </actuator>
+  <sensor>
+    <framequat name="orientation" objtype="site" objname="imu" noise="0.001"/>
+    <gyro name="angular-velocity" site="imu" noise="0.005"/>
+    <gyro name="imu_ang_vel" site="imu"/>
+    <velocimeter name="imu_lin_vel" site="imu"/>
+    <accelerometer name="imu_accel" site="imu"/>
+    <subtreeangmom name="root_angmom" body="trunk"/>
+    <touch name="left_foot_contact" site="left_foot_site"/>
+    <touch name="right_foot_contact" site="right_foot_site"/>
+  </sensor>
+  <keyframe>
+    <key name="stand" qpos="0 0 0.1385 1 0 0 0 0 0.087 -0.3 0 0.3 0.35 -0.35 0 0 0 -0.087 -0.3 0 0.3" ctrl="0 0.087 -0.3 0 0.3 0.35 -0.35 0 0 0 -0.087 -0.3 0 0.3"/>
+  </keyframe>
+</mujoco>

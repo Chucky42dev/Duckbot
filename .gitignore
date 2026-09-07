@@ -16,3 +16,9 @@ dist/
 # OS files
 .DS_Store
 Thumbs.db
+
+# Node
+node_modules/
+
+# Python
+__pycache__/

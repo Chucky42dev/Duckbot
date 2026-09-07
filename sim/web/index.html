@@ -1,0 +1,93 @@
+<!doctype html>
+<html lang="cs">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Duckbot simulátor</title>
+  <style>
+    :root {
+      --bg: #0b0b0d; --panel: #141417; --line: #2a2a30; --text: #e8e8e6;
+      --muted: #8a8a90; --orange: #f58c1a; --ok: #5dd47a; --bad: #ff5c5c;
+    }
+    * { box-sizing: border-box; }
+    html, body { margin: 0; height: 100%; background: var(--bg); color: var(--text);
+      font: 13px/1.4 ui-monospace, Consolas, "Cascadia Mono", monospace; }
+    #app { display: grid; grid-template-columns: 1fr 340px; height: 100%; }
+    #view { position: relative; min-width: 0; }
+    #view canvas { display: block; width: 100%; height: 100%; }
+    #panel { border-left: 1px solid var(--line); background: var(--panel); overflow-y: auto;
+      padding: 12px 14px; display: flex; flex-direction: column; gap: 12px; }
+    h1 { font-size: 15px; margin: 0; letter-spacing: 0.08em; text-transform: uppercase; }
+    h1 span { color: var(--orange); }
+    h2 { font-size: 11px; margin: 0 0 6px; color: var(--muted); text-transform: uppercase;
+      letter-spacing: 0.1em; }
+    .box { border: 1px solid var(--line); padding: 8px 10px; }
+    .row { display: flex; gap: 6px; flex-wrap: wrap; }
+    button { background: #1e1e23; color: var(--text); border: 1px solid var(--line);
+      padding: 6px 10px; font: inherit; cursor: pointer; }
+    button:hover { border-color: var(--orange); }
+    button.primary { background: var(--orange); color: #000; border-color: var(--orange); font-weight: 700; }
+    button.on { background: #2b2216; border-color: var(--orange); color: var(--orange); }
+    .slider { display: grid; grid-template-columns: 96px 1fr 52px; gap: 6px; align-items: center;
+      margin: 2px 0; }
+    .slider label { color: var(--muted); font-size: 11px; overflow: hidden; white-space: nowrap;
+      text-overflow: ellipsis; }
+    .slider output { text-align: right; font-size: 11px; }
+    input[type=range] { width: 100%; accent-color: var(--orange); margin: 0; }
+    table { border-collapse: collapse; width: 100%; }
+    td { padding: 1px 0; }
+    td:last-child { text-align: right; }
+    .ok { color: var(--ok); } .bad { color: var(--bad); }
+    #status { position: absolute; left: 12px; top: 10px; font-size: 11px; color: var(--muted);
+      pointer-events: none; white-space: pre; }
+    #boot { position: absolute; inset: 0; display: grid; place-items: center; background: var(--bg);
+      color: var(--orange); letter-spacing: 0.1em; }
+    #obs { font-size: 10px; color: var(--muted); word-break: break-all; line-height: 1.5;
+      max-height: 120px; overflow: auto; }
+    small { color: var(--muted); }
+  </style>
+</head>
+<body>
+  <div id="app">
+    <div id="view">
+      <canvas id="canvas"></canvas>
+      <div id="status"></div>
+      <div id="boot">NAČÍTÁM MUJOCO WASM…</div>
+    </div>
+    <aside id="panel">
+      <h1><span>Duckbot</span> simulátor</h1>
+      <div class="box">
+        <h2>Řízení</h2>
+        <div class="row">
+          <button id="reset" class="primary">Reset (stoj)</button>
+          <button id="pause">Pauza</button>
+          <button id="push">Šťouch</button>
+          <button id="squat">Dřep</button>
+          <button id="step">Krok na místě</button>
+        </div>
+        <div class="slider" style="margin-top:8px">
+          <label>tuhost serv kp</label>
+          <input id="kp" type="range" min="0.5" max="10" step="0.1" value="5" />
+          <output id="kp-out">5.0</output>
+        </div>
+        <small>0.55 = změřené XL330 (bez politiky spadne), 5 = tuhé držení</small>
+      </div>
+      <div class="box">
+        <h2>Stav</h2>
+        <table id="state"></table>
+      </div>
+      <div class="box">
+        <h2>Cílové úhly kloubů [°]</h2>
+        <div id="sliders"></div>
+        <small>Stejné pořadí jako akce politiky (14 hodnot).</small>
+      </div>
+      <div class="box">
+        <h2>Pozorování pro politiku (61 hodnot)</h2>
+        <div id="obs"></div>
+      </div>
+      <small>Myš: otáčení, kolečko: zoom, pravé tlačítko: posun. Model: sim/model/duckbot_hold.xml</small>
+    </aside>
+  </div>
+  <script type="module" src="/src/main.js"></script>
+</body>
+</html>
