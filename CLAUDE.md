@@ -19,7 +19,9 @@ an autonomous neural walking policy.
 - Simulator web address: `http://duckbot.local` (XAMPP vhost -> `sim/web/dist`)
 - Main research document: `docs/research-microduck.md`
 - PDF output: `docs/research-microduck.pdf`
-- PDF generator: `scripts/build_research_pdf.py`
+- Servo comparison and leg BOMs: `docs/servo-comparison.md` (+ `.pdf`)
+- PDF generator: `scripts/build_research_pdf.py` (builds all docs; pass
+  `research` or `servos` to build one)
 
 The project currently contains documentation and PDF generation only. Firmware,
 mechanical CAD, a MuJoCo model and a PlatformIO project have not been created

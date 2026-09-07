@@ -1,5 +1,6 @@
 from pathlib import Path
 import re
+import sys
 
 from reportlab.lib.enums import TA_CENTER
 from reportlab.lib.pagesizes import A4
@@ -21,8 +22,18 @@ from reportlab.platypus import (
 
 
 ROOT = Path(__file__).resolve().parents[1]
-SOURCE = ROOT / "docs" / "research-microduck.md"
-OUTPUT = ROOT / "docs" / "research-microduck.pdf"
+DOCUMENTS = {
+    "research": (
+        ROOT / "docs" / "research-microduck.md",
+        ROOT / "docs" / "research-microduck.pdf",
+        "Microduck a návrh Duckbotu",
+    ),
+    "servos": (
+        ROOT / "docs" / "servo-comparison.md",
+        ROOT / "docs" / "servo-comparison.pdf",
+        "Duckbot: srovnání serv a kusovníky",
+    ),
+}
 
 
 def register_fonts():
@@ -56,7 +67,7 @@ def inline_markup(text):
     return text.replace("&", "&amp;").replace("<font", "<font").replace("<b>", "<b>")
 
 
-def build_pdf():
+def build_pdf(source, output, title):
     global MONO_FONT
     regular, bold, MONO_FONT = register_fonts()
     styles = getSampleStyleSheet()
@@ -124,9 +135,15 @@ def build_pdf():
         for row in body:
             data.append([Paragraph(inline_markup(cell), styles["DuckCell"]) for cell in row])
         available = A4[0] - 36 * mm
-        widths = [available * 0.18, available * 0.57, available * 0.25]
-        if len(header) != 3:
-            widths = [available / len(header)] * len(header)
+        if len(header) == 3:
+            ratios = [0.18, 0.57, 0.25]
+        elif len(header) == 4 and header[2].strip() == "Ks":
+            ratios = [0.30, 0.47, 0.06, 0.17]  # kusovník
+        elif len(header) == 4:
+            ratios = [0.19, 0.27, 0.27, 0.27]
+        else:
+            ratios = [1 / len(header)] * len(header)
+        widths = [available * ratio for ratio in ratios]
         table = Table(data, colWidths=widths, repeatRows=1)
         table.setStyle(TableStyle([
             ("BACKGROUND", (0, 0), (-1, 0), colors.HexColor("#e9ecef")),
@@ -138,7 +155,7 @@ def build_pdf():
         return table
 
     story = []
-    lines = SOURCE.read_text(encoding="utf-8").splitlines()
+    lines = source.read_text(encoding="utf-8").splitlines()
     index = 0
     while index < len(lines):
         line = lines[index].strip()
@@ -191,13 +208,18 @@ def build_pdf():
             story.append(Paragraph(inline_markup(" ".join(parts)), styles["DuckBody"]))
 
     document = SimpleDocTemplate(
-        str(OUTPUT), pagesize=A4, rightMargin=18 * mm, leftMargin=18 * mm,
+        str(output), pagesize=A4, rightMargin=18 * mm, leftMargin=18 * mm,
         topMargin=16 * mm, bottomMargin=16 * mm,
-        title="Microduck a návrh Duckbotu",
+        title=title,
         author="Duckbot project",
     )
     document.build(story)
 
 
 if __name__ == "__main__":
-    build_pdf()
+    # Bez argumentu se sestaví všechny dokumenty; jinak jen vyjmenované klíče.
+    selected = sys.argv[1:] or list(DOCUMENTS)
+    for key in selected:
+        source, output, title = DOCUMENTS[key]
+        build_pdf(source, output, title)
+        print(f"{key}: {output.relative_to(ROOT)}")
